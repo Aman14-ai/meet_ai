@@ -1,0 +1,191 @@
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { OctagonAlertIcon } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Please enter a valid email" }),
+  password: z.string().min(1, { message: "Password is required" }),
+});
+
+const SigninView = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    setError(null);
+    setLoading(true);
+    const { email, password } = values;
+    try {
+      await authClient.signIn.email(
+        {
+          email,
+          password,
+        },
+        {
+          onError: (error) => {
+            console.log("Signin error");
+            setError(error.error.message);
+          },
+          onSuccess: () => {
+            console.log("Signin success");
+            router.push("/");
+          },
+        }
+      );
+    } catch (error) {
+      console.log("Error while signin in frontend in catch block , ", error);
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center  p-6">
+      <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-bold">
+            Login to your account
+          </CardTitle>
+          <CardDescription className="text-sm text-gray-500">
+            Enter your credentials to access your account
+          </CardDescription>
+          <div className="text-blue-600  pt-2">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/sign-up"
+              className="text-sm font-medium underline underline-offset-4"
+            >
+              Sign Up
+            </Link>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <Form {...form}>
+            <form
+              className="flex flex-col gap-5"
+              onSubmit={form.handleSubmit(handleSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Example error alert */}
+              <div>
+                {!!error && (
+                  <Alert className="bg-red-50 text-red-700 border border-red-200 flex items-center gap-2">
+                    <OctagonAlertIcon className="w-4 h-4" />
+                    <AlertTitle>{error}</AlertTitle>
+                  </Alert>
+                )}
+              </div>
+
+              <Button disabled={loading} type="submit" className="w-full rounded-lg">
+                Login
+              </Button>
+            </form>
+          </Form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <hr className="border-gray-300" />
+            <span className="absolute inset-0 flex justify-center -top-3">
+              <span className="bg-white px-2 text-sm text-gray-500">
+                or continue with
+              </span>
+            </span>
+          </div>
+
+          {/* Social login buttons */}
+          <div className="flex items-center justify-center gap-4">
+            <Button variant="outline" className="flex-1">
+              Google
+            </Button>
+            <Button variant="outline" className="flex-1">
+              GitHub
+            </Button>
+          </div>
+
+          <p className="mt-6 text-center text-xs text-gray-500">
+            By logging in, you agree to our{" "}
+            <Link href="/terms" className="underline">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default SigninView;
