@@ -113,7 +113,7 @@ const SignupView = () => {
       <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">
-            Login to your account
+            Create to your account
           </CardTitle>
           <CardDescription className="text-sm text-gray-500">
             Enter your credentials to access your account
