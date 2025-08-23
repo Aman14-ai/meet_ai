@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -46,6 +47,33 @@ const SigninView = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await authClient.signIn.social(
+        {
+          provider: "google",
+          callbackURL: "/"
+        },
+        {
+          onSuccess: () => {
+            console.log("Signin success");
+          },
+          onError: (error) => {
+            console.log("Signin error");
+            setError(error.error.message);
+          },
+        }
+      );
+    } catch (error) {
+      console.log("Error while signin in frontend in catch block , ", error);
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setError(null);
@@ -145,7 +173,11 @@ const SigninView = () => {
                 )}
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full rounded-lg">
+              <Button
+                disabled={loading}
+                type="submit"
+                className="w-full rounded-lg"
+              >
                 Login
               </Button>
             </form>
@@ -163,11 +195,13 @@ const SigninView = () => {
 
           {/* Social login buttons */}
           <div className="flex items-center justify-center gap-4">
-            <Button variant="outline" className="flex-1">
-              Google
-            </Button>
-            <Button variant="outline" className="flex-1">
-              GitHub
+            <Button
+              disabled={loading}
+              onClick={handleGoogleLogin}
+              variant="outline"
+              className="flex-1"
+            >
+              <FcGoogle className="w-5 h-5" />
             </Button>
           </div>
 

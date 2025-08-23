@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
+import { FcGoogle } from "react-icons/fc";
 import { OctagonAlertIcon } from "lucide-react";
 import {
   Card,
@@ -28,7 +29,9 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  name: z.string().min(4,{message: "Name must be at least 4 characters long"}),
+  name: z
+    .string()
+    .min(4, { message: "Name must be at least 4 characters long" }),
   email: z
     .string()
     .min(1, { message: "Email is required" })
@@ -40,7 +43,7 @@ const SignupView = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name:"",
+      name: "",
       email: "",
       password: "",
     },
@@ -49,10 +52,36 @@ const SignupView = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  const handleGoogle = async () => {
+    setLoading(true);
+    try {
+      await authClient.signIn.social(
+        {
+          provider: "google",
+          callbackURL:"/"
+        },
+        {
+          onError: (error) => {
+            console.log("Signin error");
+            setError(error.error.message);
+          },
+          onSuccess: () => {
+            console.log("Signin success");
+          },
+        }
+      );
+    } catch (error) {
+      console.log("Error while signin in frontend in catch block , ", error);
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setError(null);
     setLoading(true);
-    const { name,email, password } = values;
+    const { name, email, password } = values;
     try {
       await authClient.signUp.email(
         {
@@ -161,7 +190,11 @@ const SignupView = () => {
                 )}
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full rounded-lg">
+              <Button
+                disabled={loading}
+                type="submit"
+                className="w-full rounded-lg"
+              >
                 Login
               </Button>
             </form>
@@ -179,9 +212,14 @@ const SignupView = () => {
 
           {/* Social login buttons */}
           <div className="flex items-center justify-center gap-4">
-            <Button variant="outline" className="flex-1"></Button>
-            <Button variant="outline" className="flex-1">
-              GitHub
+            <Button
+              disabled={loading}
+              onClick={handleGoogle}
+              variant="outline"
+              className="flex-1/2 cursor-pointer"
+            >
+              <FcGoogle className="w-5 h-5" />
+              Google
             </Button>
           </div>
 
