@@ -1,4 +1,10 @@
 "use client";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,13 +23,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
+
+
 import { BotIcon, ChevronUp, StarIcon, User2, VideoIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { redirect, usePathname, useRouter } from "next/navigation";
-import React from "react";
+
+
 
 const firstSection = [
   {
@@ -124,7 +128,7 @@ const DashboardSidebar = () => {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="w-full flex items-center space-x-2 px-3 py-2  rounded-md ">
+                <SidebarMenuButton className="w-full  flex items-center space-x-2 px-3 py-2  rounded-md ">
                   {/* User Avatar */}
                   {session?.user.image ? (
                     <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -158,10 +162,20 @@ const DashboardSidebar = () => {
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
               >
-                
                 <DropdownMenuItem>
-                  <span onClick={() =>{ authClient.signOut({fetchOptions:{onSuccess: () => router.push("/sign-in")}}) }}>Sign out</span>
+                  <button
+                    onClick={() => {
+                      authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => router.push("/sign-in"),
+                        },
+                      });
+                    }}
+                  >
+                    Sign out
+                  </button>
                 </DropdownMenuItem>
+                <DropdownMenuItem>Billing</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>

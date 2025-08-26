@@ -58,7 +58,7 @@ const SignupView = () => {
       await authClient.signIn.social(
         {
           provider: "google",
-          callbackURL:"/"
+          callbackURL: "/",
         },
         {
           onError: (error) => {
@@ -216,10 +216,12 @@ const SignupView = () => {
               disabled={loading}
               onClick={handleGoogle}
               variant="outline"
-              className="flex-1/2 cursor-pointer"
+              className="flex-1 cursor-pointer flex items-center justify-center gap-2"
             >
-              <FcGoogle className="w-5 h-5" />
-              Google
+              <span>
+                <FcGoogle className="size-5" />
+              </span>
+              <span className="pb-1 text-gray-600">sign up with Google</span>
             </Button>
           </div>
 
