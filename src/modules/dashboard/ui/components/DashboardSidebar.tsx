@@ -24,10 +24,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-
 import { BotIcon, ChevronUp, StarIcon, User2, VideoIcon } from "lucide-react";
-
-
 
 const firstSection = [
   {
@@ -59,9 +56,11 @@ const DashboardSidebar = () => {
   return (
     <Sidebar className="w-64  flex flex-col h-screen shadow-lg">
       {/* Header */}
-      <SidebarHeader className="text-2xl font-bold px-4 py-5 ">
-        Meet Ai
-      </SidebarHeader>
+      <Link href="/">
+        <SidebarHeader className="text-2xl font-bold px-4 py-5 ">
+          Meet Ai
+        </SidebarHeader>
+      </Link>
 
       {/* Divider */}
       <Separator />
@@ -123,7 +122,7 @@ const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="mb-15">
+      <SidebarFooter className="mb-8">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>

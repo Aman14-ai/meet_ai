@@ -5,8 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function HomeView() {
   const { data: session } = authClient.useSession();
+
   const trpc = useTRPC();
-  const {data} = useQuery(trpc.hello.queryOptions({text:"Aman"}))
+  const {data} = useQuery(trpc.agents.getMany.queryOptions());;
+
   if(!session)
   {
     return (
@@ -18,7 +20,9 @@ export default function HomeView() {
 
   return (
     <div className="flex items-center justify-center mt-10 flex-col gap-5">
-      {data?.greeting}
+      Home page
+      <hr />
+      Data is: {JSON.stringify(data)}
     </div>
   );
 }
