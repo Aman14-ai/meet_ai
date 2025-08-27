@@ -1,6 +1,4 @@
 "use client";
-import ResponsiveDialog from "@/components/ResponsiveDialog";
-import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
@@ -14,14 +12,6 @@ const AgentViews = () => {
   return (
     <>
       <div className="text-2xl font-normal">
-        <ResponsiveDialog
-          title="test"
-          description="this is test "
-          open
-          onOpenChange={() => console.log("test")}
-        >
-          <Button>Some Action</Button>
-        </ResponsiveDialog>
         Data : {JSON.stringify(data, null, 2)}
       </div>
     </>
