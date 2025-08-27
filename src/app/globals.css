@@ -112,7 +112,8 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-body , html:root{
+body,
+html:root {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -124,5 +125,12 @@ body , html:root{
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }

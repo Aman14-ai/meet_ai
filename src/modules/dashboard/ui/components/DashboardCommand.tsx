@@ -1,10 +1,11 @@
 import {
-  CommandDialog,
+  
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
+  CommandResponsiveDialog,
   CommandSeparator,
 } from "@/components/ui/command";
 import React, { Dispatch } from "react";
@@ -16,7 +17,7 @@ type Props = {
 
 const DashboardCommand = ({ commandOpen, setCommandOpen }: Props) => {
   return (
-    <CommandDialog
+    <CommandResponsiveDialog
       open={commandOpen}
       onOpenChange={setCommandOpen}
       className="rounded-lg border shadow-md md:min-w-[450px]"
@@ -35,7 +36,7 @@ const DashboardCommand = ({ commandOpen, setCommandOpen }: Props) => {
           <CommandItem>Settings</CommandItem>
         </CommandGroup>
       </CommandList>
-    </CommandDialog>
+    </CommandResponsiveDialog>
   );
 };
 
