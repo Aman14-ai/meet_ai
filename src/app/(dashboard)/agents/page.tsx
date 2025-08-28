@@ -17,16 +17,15 @@ const page = async () => {
   void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
 
   const session = await auth.api.getSession({
-    headers:await headers(),
-  })
-  if(!session)
-  {
+    headers: await headers(),
+  });
+  if (!session) {
     redirect("/sign-in");
   }
 
   return (
     <>
-    <ListHeaders />
+      <ListHeaders />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Suspense
           fallback={
@@ -36,7 +35,14 @@ const page = async () => {
             />
           }
         >
-          <ErrorBoundary fallback={<ErrorState title="Error while fetching agents" description="Something went wrong. Please try again later." />}>
+          <ErrorBoundary
+            fallback={
+              <ErrorState
+                title="Error while fetching agents"
+                description="Something went wrong. Please try again later."
+              />
+            }
+          >
             <AgentViews />
           </ErrorBoundary>
         </Suspense>

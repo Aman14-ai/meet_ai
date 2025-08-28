@@ -11,7 +11,7 @@ const AgentViews = () => {
 
   return (
     <>
-      <div className="text-2xl font-normal">
+      <div className="text-xl font-normal max-w-screen overflow-x-scroll p-2">
         Data : {JSON.stringify(data, null, 2)}
       </div>
     </>
