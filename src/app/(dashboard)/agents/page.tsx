@@ -12,6 +12,8 @@ import { redirect } from "next/navigation";
 
 // instead of fetching data in client components it will better to fetched in server side and provide in cache.
 
+
+
 const page = async () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());

@@ -32,12 +32,13 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
-      onSuccess: async() => {
+      onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions());
         // updating the ui without reloading on new create.
-        if(initialValues ?.id)
-        {
-            await queryClient.invalidateQueries(trpc.agents.getOne.queryOptions({id:initialValues.id}));
+        if (initialValues?.id) {
+          await queryClient.invalidateQueries(
+            trpc.agents.getOne.queryOptions({ id: initialValues.id })
+          );
         }
         onSuccess?.();
         toast.success("Agent created successfully");
@@ -69,36 +70,51 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="space-y-6 p-6 bg-card rounded-lg shadow-md"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           name="name"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-sm font-medium text-primary">
+                Name
+              </FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  className="w-full px-4 bg-input py-2 border border-border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  placeholder="Enter your name"
+                />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormMessage />
-        <FormField
-          name="instruction"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Instruction</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500 text-xs mt-1" />
             </FormItem>
           )}
         />
 
-        <div className="flex items-center justify-end gap-2">
+        <FormField
+          name="instruction"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel className="text-sm font-medium text-primary">
+                Instruction
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  className="w-full px-4 py-2 border border-border bg-input rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 min-h-[120px]"
+                  placeholder="Enter your instructions here..."
+                />
+              </FormControl>
+              <FormMessage className="text-red-500 text-xs mt-1" />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex items-center justify-end gap-3 pt-4  ">
           {onCancel && (
             <Button
               disabled={isPending}
@@ -109,8 +125,39 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
               Cancel
             </Button>
           )}
-          <Button type="submit" disabled={isPending}>
-            {isEdit ? "Update" : "Create"}
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isPending ? (
+              <>
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Processing...
+              </>
+            ) : isEdit ? (
+              "Update"
+            ) : (
+              "Create"
+            )}
           </Button>
         </div>
       </form>

@@ -2,6 +2,9 @@
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
+import { DataTable } from "../components/DataTable";
+import { columns } from "../components/columns";
+import EmptyState from "@/components/EmptyState";
 
 const AgentViews = () => {
   const trpc = useTRPC();
@@ -11,8 +14,9 @@ const AgentViews = () => {
 
   return (
     <>
-      <div className="text-xl font-normal max-w-screen overflow-x-scroll p-2">
-        Data : {JSON.stringify(data, null, 2)}
+      <div className="text-xl flex-1 pb-4 px-4 md:px-8 flex flex-col gap-y-4 font-normal max-w-screen p-2">
+        <DataTable data={data} columns={columns} />
+        {data.length === 0 && <EmptyState title="No Agents" description="No Agents Found. Please try to create an agent.  " />}
       </div>
     </>
   );
