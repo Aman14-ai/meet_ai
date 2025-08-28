@@ -43,7 +43,7 @@ const DashboardNavbar = () => {
         commandOpen={commandOpen}
         setCommandOpen={setCommandOpen}
       />
-      <nav className="flex justify-between bg-background px-4 py-2 gap-x-2 border-b">
+      <nav className="flex justify-between bg-background px-4 py-3 gap-x-2 border-b">
         <div className="flex items-center justify-center gap-3">
           <Button
             onClick={() => toggleSidebar()}

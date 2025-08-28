@@ -19,7 +19,7 @@ export default function HomeView() {
   }
 
   return (
-    <div className="flex items-center max-w-screen justify-center mt-10 flex-col gap-5">
+    <div className="flex  overflow-x-scroll items-center max-w-screen justify-center mt-10 flex-col gap-5">
       Home page
       <hr />
       Data is: {JSON.stringify(data)}
