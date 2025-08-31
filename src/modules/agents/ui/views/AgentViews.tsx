@@ -16,7 +16,12 @@ const AgentViews = () => {
     <>
       <div className="text-xl flex-1 pb-4 px-4 md:px-8 flex flex-col gap-y-4 font-normal max-w-screen p-2">
         <DataTable data={data} columns={columns} />
-        {data.length === 0 && <EmptyState title="No Agents" description="No Agents Found. Please try to create an agent.  " />}
+        {data.length === 0 && (
+          <EmptyState
+            title="No Agents"
+            description="No Agents Found. Please try to create an agent.  "
+          />
+        )}
       </div>
     </>
   );
