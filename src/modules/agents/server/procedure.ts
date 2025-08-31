@@ -3,7 +3,7 @@ import { z } from "zod";
 import { agent } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { agentInsertSchema } from "../schema";
-import { and, eq, getTableColumns, sql } from "drizzle-orm";
+import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
@@ -12,26 +12,49 @@ import {
 } from "@/constants";
 
 export const agentsRouter = createTRPCRouter({
-
   getMany: protectedProcedure
     .input(
-      z
-        .object({
-          page: z.number().default(DEFAULT_PAGE),
-          pageSize: z
-            .number()
-            .min(MIN_PAGE_SIZE)
-            .max(MAX_PAGE_SIZE)
-            .default(DEFAULT_PAGE_SIZE),
-          search: z.string().nullish(),
-        })
-        .optional()
+      z.object({
+        page: z.number().default(DEFAULT_PAGE),
+        pageSize: z
+          .number()
+          .min(MIN_PAGE_SIZE)
+          .max(MAX_PAGE_SIZE)
+          .default(DEFAULT_PAGE_SIZE),
+        search: z.string().nullish(),
+      })
     )
-    .query(async ({ctx , input}) => {
+    .query(async ({ ctx, input }) => {
+      const { search, page, pageSize } = input;
       const data = await db
-        .select({ meetingCount: sql<number>`1`, ...getTableColumns(agent) })
-        .from(agent).where(and(eq(agent.userId , ctx.session.user.id)));
-      return data;
+        .select({ meetingCount: sql<number>`5`, ...getTableColumns(agent) })
+        .from(agent)
+        .where(
+          and(
+            eq(agent.userId, ctx.session.user.id),
+            search ? ilike(agent.name, `%${search}%`) : undefined
+          )
+        )
+        .orderBy(desc(agent.createdAt), desc(agent.id))
+        .limit(pageSize)
+        .offset((page - 1) * pageSize);
+
+      const total = await db
+        .select({ count: count() })
+        .from(agent)
+        .where(
+          and(
+            eq(agent.userId, ctx.session.user.id),
+            search ? ilike(agent.name, `%${search}%`) : undefined
+          )
+        );
+
+      const totalPages = Math.ceil((total[0]?.count ?? 0) / pageSize);
+      return {
+        items: data,
+        total: total[0]?.count ?? 0,
+        totalPages,
+      };
     }),
 
   getOne: protectedProcedure

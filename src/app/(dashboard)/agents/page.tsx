@@ -9,14 +9,24 @@ import { ErrorBoundary } from "react-error-boundary";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { SearchParams } from "nuqs";
+import { loadSearchParms } from "@/modules/agents/params";
 
 // instead of fetching data in client components it will better to fetched in server side and provide in cache.
 
+interface Props {
+  searchParams: Promise<SearchParams>;
+}
 
-
-const page = async () => {
+const page = async ({ searchParams }: Props) => {
+  const filter = await loadSearchParms(searchParams);
+  console.log("\n\nRadhe Radhe", filter);
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
+  void queryClient.prefetchQuery(
+    trpc.agents.getMany.queryOptions({ ...filter })
+  );
+
+  // NOTE: queryOptions should be matched in both client side and server side otherwise it looses the headers
 
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -45,7 +55,9 @@ const page = async () => {
               />
             }
           >
-            <AgentViews />
+            <div className="bg-muted">
+              <AgentViews />
+            </div>
           </ErrorBoundary>
         </Suspense>
       </HydrationBoundary>
