@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { TRPCError } from "@trpc/server";
 
 type Props = {
   onSuccess?: () => void;
@@ -33,7 +34,9 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({})
+        );
         // updating the ui without reloading on new create.
         if (initialValues?.id) {
           await queryClient.invalidateQueries(
@@ -49,6 +52,29 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
     })
   );
 
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({})
+        )
+        if(initialValues?.id) {
+          await queryClient.invalidateQueries(
+            trpc.agents.getOne.queryOptions({ id: initialValues.id })
+          );
+        }
+        onSuccess?.();
+        toast.success("Agent updated successfully");
+      },
+      onError: (error) => {
+        if (error instanceof TRPCError) {
+          toast.error(error.message);
+        }
+        toast.error("Something went wrong.");
+      },
+    })
+  );
+
   const form = useForm<z.infer<typeof agentInsertSchema>>({
     resolver: zodResolver(agentInsertSchema),
     defaultValues: {
@@ -58,11 +84,11 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
   });
 
   const isEdit = !!initialValues?.id;
-  const isPending = createAgent.isPending;
+  const isPending = createAgent.isPending || updateAgent.isPending;
 
   const onSubmit = (values: z.infer<typeof agentInsertSchema>) => {
     if (isEdit) {
-      console.log("Todo is edit");
+      updateAgent.mutate({ ...values, id: initialValues?.id ?? "" });
       return;
     }
     createAgent.mutate(values);
