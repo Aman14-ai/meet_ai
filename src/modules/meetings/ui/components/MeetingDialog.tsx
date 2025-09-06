@@ -1,28 +1,28 @@
 import ResponsiveDialog from "@/components/ResponsiveDialog";
 import React from "react";
-import AgentForm from "./AgentForm";
+import MeetingForm from "./MeetingForm";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const CreateAgentDialog = ({ open, onOpenChange }: Props) => {
+const MeetingDialog = ({open , onOpenChange}: Props) => {
   return (
     <div>
       <ResponsiveDialog
         open={open}
         onOpenChange={onOpenChange}
-        title="Create Agent"
-        description="Create a new agent"
+        title="Create New Meeting"
+        description="Create a new meeting to solve your tasks"
       >
-        <AgentForm
+        <MeetingForm
           onCancel={() => onOpenChange(false)}
           onSuccess={() => onOpenChange(false)}
         />
       </ResponsiveDialog>
-    </div>  
+    </div>
   );
 };
 
-export default CreateAgentDialog;
+export default MeetingDialog;
