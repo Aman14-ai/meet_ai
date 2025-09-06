@@ -109,20 +109,20 @@ const SignupView = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center  p-6">
-      <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200">
+    <div className="flex min-h-screen items-center justify-center p-6">
+      <Card className="w-full max-w-md shadow-xl rounded-2xl border border-border">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">
-            Create to your account
+          <CardTitle className="text-xl sm:text-2xl font-bold">
+            Create your account
           </CardTitle>
-          <CardDescription className="text-sm text-gray-500">
+          <CardDescription className="text-xs sm:text-sm text-muted-foreground">
             Enter your credentials to access your account
           </CardDescription>
-          <div className="text-blue-600  pt-2">
+          <div className="text-blue-600 pt-2 text-xs sm:text-sm">
             Already have an account?{" "}
             <Link
               href="/sign-in"
-              className="text-sm font-medium underline underline-offset-4"
+              className="font-medium underline underline-offset-4"
             >
               Sign in
             </Link>
@@ -135,67 +135,83 @@ const SignupView = () => {
               className="flex flex-col gap-5"
               onSubmit={form.handleSubmit(handleSubmit)}
             >
+              {/* Name */}
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your name" {...field} />
+                      <Input
+                        placeholder="Enter your name"
+                        className="text-sm sm:text-base"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
+
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">
+                      Email
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
+                      <Input
+                        placeholder="Enter your email"
+                        className="text-sm sm:text-base"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
 
+              {/* Password */}
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="Enter your password"
+                        className="text-sm sm:text-base"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
 
-              {/* Example error alert */}
-              <div>
-                {!!error && (
-                  <Alert className="bg-red-50 text-red-700 border border-red-200 flex items-center gap-2">
-                    <OctagonAlertIcon className="w-4 h-4" />
-                    <AlertTitle>{error}</AlertTitle>
-                  </Alert>
-                )}
-              </div>
+              {/* Error alert */}
+              {!!error && (
+                <Alert className="bg-red-50 text-red-700 border border-red-200 flex items-center gap-2 text-xs sm:text-sm">
+                  <OctagonAlertIcon className="w-4 h-4" />
+                  <AlertTitle>{error}</AlertTitle>
+                </Alert>
+              )}
 
+              {/* Submit button */}
               <Button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-lg"
+                className="w-full rounded-lg text-sm sm:text-base py-2 sm:py-3"
               >
-                Login
+                Sign Up
               </Button>
             </form>
           </Form>
@@ -204,29 +220,28 @@ const SignupView = () => {
           <div className="relative my-6">
             <hr className="border-gray-300" />
             <span className="absolute inset-0 flex justify-center -top-3">
-              <span className="bg-white px-2 text-sm text-gray-500">
+              <span className="bg-background px-2 text-xs sm:text-sm text-muted-foreground">
                 or continue with
               </span>
             </span>
           </div>
 
-          {/* Social login buttons */}
-          <div className="flex items-center justify-center gap-4">
+          {/* Social login */}
+          <div className="flex items-center justify-center gap-3 sm:gap-4">
             <Button
               disabled={loading}
               onClick={handleGoogle}
               variant="outline"
-              className="flex-1 cursor-pointer flex items-center justify-center gap-2"
+              className="flex-1 cursor-pointer flex items-center justify-center gap-2 py-2 sm:py-3 text-xs sm:text-sm"
             >
-              <span>
-                <FcGoogle className="size-5" />
-              </span>
-              <span className="pb-1 text-gray-600">sign up with Google</span>
+              <FcGoogle className="size-5" />
+              <span className="text-muted-foreground">sign up with Google</span>
             </Button>
           </div>
 
-          <p className="mt-6 text-center text-xs text-gray-500">
-            By logging in, you agree to our{" "}
+          {/* Terms */}
+          <p className="mt-6 text-center text-[10px] sm:text-xs text-muted-foreground leading-relaxed">
+            By signing up, you agree to our{" "}
             <Link href="/terms" className="underline">
               Terms
             </Link>{" "}

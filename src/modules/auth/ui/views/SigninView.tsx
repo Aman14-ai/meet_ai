@@ -55,7 +55,7 @@ const SigninView = () => {
       await authClient.signIn.social(
         {
           provider: "google",
-          callbackURL: "/"
+          callbackURL: "/",
         },
         {
           onSuccess: () => {
@@ -105,20 +105,20 @@ const SigninView = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center  p-6">
-      <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200">
+    <div className="flex min-h-screen items-center justify-center p-6">
+      <Card className="w-full max-w-md shadow-xl rounded-2xl border border-border">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-xl sm:text-2xl font-bold"> 
             Login to your account
           </CardTitle>
-          <CardDescription className="text-sm text-gray-500">
+          <CardDescription className="text-xs sm:text-sm text-muted-foreground">
             Enter your credentials to access your account
           </CardDescription>
-          <div className="text-blue-600  pt-2">
+          <div className="text-blue-600 pt-2 text-xs sm:text-sm">
             Don&apos;t have an account?{" "}
             <Link
               href="/sign-up"
-              className="text-sm font-medium underline underline-offset-4"
+              className="font-medium underline underline-offset-4"
             >
               Sign Up
             </Link>
@@ -136,11 +136,17 @@ const SigninView = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">
+                      Email
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
+                      <Input
+                        placeholder="Enter your email"
+                        className="text-sm sm:text-base"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
@@ -150,33 +156,33 @@ const SigninView = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-sm sm:text-base">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="Enter your password"
+                        className="text-sm sm:text-base"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
 
-              {/* Example error alert */}
-              <div>
-                {!!error && (
-                  <Alert className="bg-red-50 text-red-700 border border-red-200 flex items-center gap-2">
-                    <OctagonAlertIcon className="w-4 h-4" />
-                    <AlertTitle>{error}</AlertTitle>
-                  </Alert>
-                )}
-              </div>
+              {!!error && (
+                <Alert className="bg-red-50 text-red-700 border border-red-200 flex items-center gap-2 text-xs sm:text-sm">
+                  <OctagonAlertIcon className="w-4 h-4" />
+                  <AlertTitle>{error}</AlertTitle>
+                </Alert>
+              )}
 
               <Button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-lg"
+                className="w-full rounded-lg text-sm sm:text-base py-2 sm:py-3"
               >
                 Login
               </Button>
@@ -185,31 +191,28 @@ const SigninView = () => {
 
           {/* Divider */}
           <div className="relative my-6">
-            <hr className="border-gray-300" />
+            <hr className="border-foreground" />
             <span className="absolute inset-0 flex justify-center -top-3">
-              <span className="bg-white px-2 text-sm text-gray-500">
+              <span className="bg-background px-2 text-xs sm:text-sm text-muted-foreground">
                 or continue with
               </span>
             </span>
           </div>
 
           {/* Social login buttons */}
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-3 sm:gap-4">
             <Button
               disabled={loading}
               onClick={handleGoogleLogin}
               variant="outline"
-              className="flex-1 cursor-pointer flex items-center justify-center gap-2"
+              className="flex-1 cursor-pointer flex items-center justify-center gap-2 py-2 sm:py-3 text-xs sm:text-sm"
             >
-              
-                <span><FcGoogle className="size-5" /></span>
-                <span className="pb-1 text-gray-600">sign in with Google</span>
-              
-              
+              <FcGoogle className="size-5" />
+              <span className="text-muted-foreground">sign in with Google</span>
             </Button>
           </div>
 
-          <p className="mt-6 text-center text-xs text-gray-500">
+          <p className="mt-6 text-center text-[10px] sm:text-xs text-muted-foreground">
             By logging in, you agree to our{" "}
             <Link href="/terms" className="underline">
               Terms
