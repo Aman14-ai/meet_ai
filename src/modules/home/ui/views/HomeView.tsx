@@ -7,7 +7,7 @@ export default function HomeView() {
   const { data: session } = authClient.useSession();
 
   const trpc = useTRPC();
-  const {data} = useQuery(trpc.agents.getMany.queryOptions());;
+  const {data} = useQuery(trpc.agents.getMany.queryOptions({}));;
 
   if(!session)
   {

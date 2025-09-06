@@ -21,6 +21,7 @@ interface Props {
 const page = async ({ searchParams }: Props) => {
   const filter = await loadSearchParms(searchParams);
   console.log("\n\nRadhe Radhe", filter);
+  
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(
     trpc.agents.getMany.queryOptions({ ...filter })
