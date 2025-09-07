@@ -10,7 +10,7 @@ const MeetingView = () => {
 
   return (
     <>
-      
+      {JSON.stringify(data , null,2)}
     </>
   );
 };

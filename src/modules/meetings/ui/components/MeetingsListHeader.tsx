@@ -13,7 +13,7 @@ const MeetingsListHeader = () => {
       <div className="p-4 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h5 className="font-medium text-xl">My Meetings</h5>
-          <Button onClick={() => setOpen((prev) => !prev)} variant={"default"}>
+          <Button onClick={() => setOpen(true)} variant={"default"}>
             <PlusIcon /> New Meeting
           </Button>
         </div>

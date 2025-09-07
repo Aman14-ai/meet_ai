@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { TRPCError } from "@trpc/server";
 import { MeetingGetOne } from "../../types";
 import AgentSelectForMeetingForm from "./AgentSelectForMeetingForm";
+import {  useRouter } from "next/navigation";
 
 type Props = {
   onSuccess?: () => void;
@@ -28,6 +29,8 @@ type Props = {
 };
 
 const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
+  const [agentIdForPush, setAgentIdForPush] = React.useState(initialValues?.agentId || "");
+  const router = useRouter();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -37,9 +40,10 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
         await queryClient.invalidateQueries(
           trpc.meetings.getMany.queryOptions({})
         );
-
+        
         onSuccess?.();
         toast.success("Meeting created successfully");
+        router.push(`/meetings/${agentIdForPush}`);
       },
       onError: (error) => {
         if (error instanceof TRPCError) {
@@ -50,6 +54,7 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
       },
     })
   );
+
 
   const updateMeeting = useMutation(
     trpc.meetings.update.mutationOptions({
@@ -92,6 +97,7 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
       return;
     }
     createMeeting.mutate(values);
+    setAgentIdForPush(values.agentId);
   };
 
   return (
