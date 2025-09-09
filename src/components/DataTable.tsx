@@ -18,12 +18,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onRowClick?: (data: TData) => void
+  title:string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  onRowClick
+  onRowClick,
+  title
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -54,7 +56,7 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-19 text-muted-foreground text-center">
-                No Agent Found.
+                No {title} Found.
               </TableCell>
             </TableRow>
           )}
