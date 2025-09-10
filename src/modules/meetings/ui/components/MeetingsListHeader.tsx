@@ -10,9 +10,9 @@ const MeetingsListHeader = () => {
   const [open, setOpen] = useState(false);
 
   const [filter, setFilter] = useMeetingFilters();
-  const isFilterNotNull = !!filter.search;
+  const isFilterNotNull = !!filter.search || !!filter.agentId || !!filter.status  ;
   const onClear = () => {
-    setFilter({ search: "", page: 1 });
+    setFilter({ search: "", page: 1, agentId: "", status: "" });
   };
 
   return (

@@ -7,11 +7,20 @@ import { columns } from "../components/columns";
 import EmptyState from "@/components/EmptyState";
 import { useMeetingFilters } from "../../hooks/MeetingFilterHooks";
 import DataPagination from "@/modules/agents/ui/components/DataPagination";
+import { MeetingStatus } from "../../types";
 
 const MeetingView = () => {
   const [filter, setFilter] = useMeetingFilters();
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.meetings.getMany.queryOptions({...filter}));
+  const { data } = useSuspenseQuery(
+    trpc.meetings.getMany.queryOptions({
+      agentId: filter.agentId || undefined,
+      page: filter.page,
+      search: filter.search || undefined,
+      status: (filter.status as MeetingStatus) || undefined,
+      pageSize: 10,
+    })
+  );
   console.log(data);
 
   return (
