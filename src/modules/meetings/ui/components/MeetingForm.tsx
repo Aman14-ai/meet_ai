@@ -28,22 +28,22 @@ type Props = {
   initialValues?: MeetingGetOne;
 };
 
-const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
-  const [agentIdForPush, setAgentIdForPush] = React.useState(initialValues?.agentId || "");
+const MeetingForm = ({ onCancel, onSuccess, initialValues }: Props) => {
   const router = useRouter();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   const createMeeting = useMutation(
     trpc.meetings.create.mutationOptions({
-      onSuccess: async () => {
+      onSuccess: async (data) => {
+        const createdMeeting = data
         await queryClient.invalidateQueries(
           trpc.meetings.getMany.queryOptions({})
         );
         
         onSuccess?.();
         toast.success("Meeting created successfully");
-        router.push(`/meetings/${agentIdForPush}`);
+        router.push(`/meetings/${createdMeeting.id}`);
       },
       onError: (error) => {
         if (error instanceof TRPCError) {
@@ -97,7 +97,6 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
       return;
     }
     createMeeting.mutate(values);
-    setAgentIdForPush(values.agentId);
   };
 
   return (
@@ -192,4 +191,4 @@ const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
   );
 };
 
-export default AgentForm;
+export default MeetingForm;

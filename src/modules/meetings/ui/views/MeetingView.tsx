@@ -8,8 +8,10 @@ import EmptyState from "@/components/EmptyState";
 import { useMeetingFilters } from "../../hooks/MeetingFilterHooks";
 import DataPagination from "@/modules/agents/ui/components/DataPagination";
 import { MeetingStatus } from "../../types";
+import { useRouter } from "next/navigation";
 
 const MeetingView = () => {
+  const router = useRouter();
   const [filter, setFilter] = useMeetingFilters();
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(
@@ -26,7 +28,7 @@ const MeetingView = () => {
   return (
     <>
       <div className="flex-1 pb-4 px-4 md:px-8 flex flex-col gap-y-4">
-        <DataTable title="Meetings" data={data.items} columns={columns} />
+        <DataTable onRowClick={(data) => router.push(`/meetings/${data.id}`)} title="Meetings" data={data.items} columns={columns} />
         {data.items.length == 0 && (
           <EmptyState
             title="No Meetings"

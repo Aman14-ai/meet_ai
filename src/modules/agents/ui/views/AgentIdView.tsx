@@ -68,7 +68,7 @@ const AgentIdView = ({ agentId }: Props) => {
       <UpdateAgentDialog open={openUpdateAgentDialog} onOpenChange={setOpenUpdateAgentDialog} agent={data} />
       <div className="flex-1 py-4 px-4 md:px-8 flex flex-col gap-y-4">
         <AgentIdViewHeader
-          agentId={agentId}
+          agentId={agentId} 
           agentName={data.name}
           onEdit={() => {
             setOpenUpdateAgentDialog((prev) => !prev);
