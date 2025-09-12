@@ -12,6 +12,10 @@ import { TRPCError } from "@trpc/server";
 import { toast } from "sonner";
 import { useConfirm } from "@/modules/agents/hooks/useConfirm";
 import UpdateMeetingDialog from "../components/UpdateMeetingDialog";
+import UpcomingState from "../components/UpcomingState";
+import ActiveState from "../components/ActiveState";
+import CancelledState from "../components/CancelledState";
+import ProcessingState from "../components/ProcessingState";
 
 interface Props {
   meetingId: string;
@@ -26,6 +30,12 @@ const MeetingIdView = ({ meetingId }: Props) => {
   );
 
   console.log(data);
+
+  const isUpcoming = data.status === "upcoming";
+  const isCancelled = data.status === "cancelled";
+  const isCompleted = data.status === "completed";
+  const isActive = data.status === "active";
+  const isProcessing = data.status === "processing";
 
   /////////////////////////////////// remove meeting /////////////////////////////////
 
@@ -64,17 +74,33 @@ const MeetingIdView = ({ meetingId }: Props) => {
 
   const [openUpdateMeetingDialog, setOpenUpdateMeetingDialog] = useState(false);
 
-
   return (
     <>
       <RemoveConfirmation />
-      <UpdateMeetingDialog open={openUpdateMeetingDialog} onOpenChange={setOpenUpdateMeetingDialog} meeting={data}  />
-      <MeetingIdViewHeader
-        onEdit={() => setOpenUpdateMeetingDialog(true)}
-        onRemove={handleRemoveConfirmation}
-        meetingName={data.name}
-        meetingId={data.id}
+      <UpdateMeetingDialog
+        open={openUpdateMeetingDialog}
+        onOpenChange={setOpenUpdateMeetingDialog}
+        meeting={data}
       />
+      <div className="flex-1 py-4 px-4 md:px-8 flex flex-col gap-y-4">
+        <MeetingIdViewHeader
+          onEdit={() => setOpenUpdateMeetingDialog(true)}
+          onRemove={handleRemoveConfirmation}
+          meetingName={data.name}
+          meetingId={data.id}
+        />
+        {isUpcoming && (
+          <UpcomingState
+            meetingId={meetingId}
+            onCancelMeeting={() => {}}
+            isCancellingMeeting={false}
+          />
+        )}
+        {isActive && <ActiveState meetingId={meetingId} />}
+        {isProcessing && <ProcessingState />}
+        {isCompleted && <div>Completed Meeting View</div>}
+        {isCancelled && <CancelledState />}
+      </div>
     </>
   );
 };
